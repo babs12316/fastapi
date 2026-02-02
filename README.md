@@ -110,8 +110,71 @@ fastapi is class that provides all functionality for your api
 
 app = FastAPI()
 
+
 create a FastAPI "instance"
 
-Here the app variable will be an "instance" of the class FastAPI.
-
+Here the app variable will be an "instance" of the class FastAPI.  
 This will be the main point of interaction to create all your API.
+
+
+
+# Middelware
+
+If you have multiple endpoints and you want the same logic to run for every request, middleware makes sense.
+
+If you have only one endpoint with one function, it’s better to put the logic directly inside that function instead of middleware.
+
+request.body is stream so once read it becomes empty
+
+
+```
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start = time.time()
+    response = await call_next(request)
+    duration = time.time() - start
+
+    print(f"{request.method} {request.url.path} → {duration:.2f}s")
+    return response
+
+
+Registers a global HTTP middleware
+Runs before and after every request.
+
+request: Request  
+Gives you access to:
+path (/chat)
+method (POST)
+headers
+body
+
+call_next(request)
+you have handled request now what to do? this call_next function pass response of middelware to route (POST /chat)  or next middelware
+```
+
+Middelware should be used for   
+Logging & observability (most common) like shown in above example
+Authentication / authorization (headers-based)
+```
+auth = request.headers.get("Authorization")
+```
+Rate limiting  
+```
+client_ip = request.client.host
+
+```
+CORS / security headers  
+```
+response.headers["X-Frame-Options"] = "DENY"
+
+```
+Global request blocking (path / method)
+```
+if request.url.path.startswith("/admin"):
+    return JSONResponse(status_code=403)
+
+
+
+```
+
+
