@@ -173,8 +173,57 @@ Global request blocking (path / method)
 if request.url.path.startswith("/admin"):
     return JSONResponse(status_code=403)
 
+```
+
+
+Python modules expose everything by default.  
+
+
+# use of __all__  
+```
+# app.py
+from fastapi import FastAPI
+
+app = FastAPI()
+
+__all__ = ["app"]  -->  If someone uses from app import *, only give them app
+```
+
+
+
+
+
+# test function  
+def test_health():  
+Any function starting with test_ is a test
+
+```
+from fastapi.testclient import TestClient
+from api import app
+
+client = TestClient(app)
+
+def test_health():
+    response = client.get("/health")
+    assert response.status_code == 200
+    assert response.json()["status"] == "ok"
 
 
 ```
+
+
+<img width="793" height="335" alt="Screenshot 2026-02-04 at 22 34 40" src="https://github.com/user-attachments/assets/095b19d9-dc9c-4f5e-b6a6-728ffb60170a" />     
+    
+<img width="950" height="633" alt="Screenshot 2026-02-04 at 22 46 17" src="https://github.com/user-attachments/assets/dbfd960a-96a7-44e5-a7d5-970e4a9140bc" />  
+ 
+
+<img width="918" height="426" alt="Screenshot 2026-02-04 at 22 47 15" src="https://github.com/user-attachments/assets/fe213dc7-5fa9-4e97-b102-afe9afd47ed8" />  
+  
+
+
+ <img width="712" height="539" alt="Screenshot 2026-02-04 at 23 04 57" src="https://github.com/user-attachments/assets/9f891977-ba5f-4e94-a844-e0ec52ace8f1" />
+
+  
+ <img width="850" height="627" alt="Screenshot 2026-02-04 at 23 05 52" src="https://github.com/user-attachments/assets/0c2dad9d-437d-461a-b83e-c06ff9def2a3" />
 
 
